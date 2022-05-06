@@ -8,7 +8,7 @@
     'xcode_settings': {
       'OTHER_CFLAGS': [
         '-std=c++11',
-        '-g',
+        '-ggdb',
         '-Wno-deprecated-register',
         #'-fvisibility=hidden -fvisibility-inlines-hidden -pthread -fPIC'
         '-pthread -fPIC'
@@ -36,7 +36,7 @@
           '$(COMPILER_FLAGS)',
           '-pthread -fPIC',
           '-std=c++11',
-          '-g',
+          '-ggdb',
           '-O1 -D_FORTIFY_SOURCE=1',
         ],
 
@@ -53,6 +53,7 @@
           '$(ANSDK_DIR)/opentelemetry/1.2.0/lib/libopentelemetry_otlp_recordable.so',
           '$(ANSDK_DIR)/opentelemetry/1.2.0/lib/libopentelemetry_exporter_ostream_span.so',
           '$(ANSDK_DIR)/opentelemetry/1.2.0/lib/libopentelemetry_exporter_otlp_grpc.so',
+          '$(ANSDK_DIR)/opentelemetry/1.2.0/lib/libopentelemetry_exporter_zipkin_trace.so',
           '$(BOOST_LIB)',
           '$(LINKER_FLAGS)',
           '$(LIBRARY_FLAGS)',
@@ -64,6 +65,7 @@
           '../include/util',
           '../include/core',
           '$(ANSDK_DIR)/opentelemetry/1.2.0/include/',
+          '$(ANSDK_DIR)/nlohmann1/',
           '$(BOOST_INCLUDE)'
         ],
 
