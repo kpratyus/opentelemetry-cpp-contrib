@@ -26,6 +26,7 @@
 #include "opentelemetry/sdk/trace/samplers/trace_id_ratio.h"
 #include "opentelemetry/sdk/resource/resource.h"
 #include "opentelemetry/exporters/otlp/otlp_grpc_exporter.h"
+#include "opentelemetry/exporters/zipkin/zipkin_exporter.h"
 #include "opentelemetry/baggage/propagation/baggage_propagator.h"
 #include <module_version.h>
 #include <fstream>
@@ -40,6 +41,8 @@ namespace sdkwrapper {
 namespace {
   constexpr const char* OTLP_EXPORTER_TYPE = "otlp";
   constexpr const char* OSSTREAM_EXPORTER_TYPE = "osstream";
+  constexpr const char* ZIPKIN_EXPORTER_TYPE = "zipkin";
+  constexpr const char* JAEGER_EXPORTER_TYPE = "jaeger";
   constexpr const char* SIMPLE_PROCESSOR = "simple";
   constexpr const char* BATCH_PROCESSOR = "batch";
   constexpr const char* ALWAYS_ON_SAMPLER = "always_on";
@@ -118,7 +121,20 @@ OtelSpanExporter SdkHelperFactory::GetExporter(
 
     if (type == OSSTREAM_EXPORTER_TYPE) {
         exporter.reset(new opentelemetry::exporter::trace::OStreamSpanExporter);
-    } else {
+    }
+    else if(type == ZIPKIN_EXPORTER_TYPE) 
+    {
+        opentelemetry::exporter::zipkin::ZipkinExporterOptions opts;
+        opts.endpoint = config->getOtelExporterEndpoint();
+        // if (config->getOtelSslEnabled()) {
+        //     opts.use_ssl_credentials = config->getOtelSslEnabled();
+        //     opts.ssl_credentials_cacert_path = config->getOtelSslCertPath();
+        //     LOG4CXX_TRACE(mLogger, "Ssl Credentials are enabled for exporter, path: "
+        //         << opts.ssl_credentials_cacert_path);
+        // }
+        exporter.reset(new opentelemetry::exporter::zipkin::ZipkinExporter(opts));
+    }
+    else {
         if (type != OTLP_EXPORTER_TYPE) {
           // default is otlp exporter
           LOG4CXX_WARN(mLogger, "Received unknown exporter type: " << type << ". Will create default(otlp) exporter");
